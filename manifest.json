@@ -2,8 +2,8 @@
   "name": "cybersource-fraud",
   "vendor": "vtex",
   "version": "0.0.1",
-  "title": "cybersource-fraud",
-  "description": "cybersource-fraud",
+  "title": "Cybersource IO Antifraud",
+  "description": "Antifraud services for Cybersource IO app",
   "categories": [],
   "settingsSchema": {},
   "registries": [
