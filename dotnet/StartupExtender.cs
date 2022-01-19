@@ -1,3 +1,4 @@
+using Cybersource.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,11 +16,8 @@ namespace Vtex
 
         public void ExtendConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IGiftcardProviderProtocol, GiftcardProviderProtocol>();
-            services.AddTransient<IGiftCardRepository, GiftCardRepository>();
+            services.AddTransient<IVtexApiService, VtexApiService>();
             services.AddSingleton<IVtexEnvironmentVariableProvider, VtexEnvironmentVariableProvider>();
-            services.AddTransient<IMerchantSettingsRepository, MerchantSettingsRepository>();
-            services.AddTransient<IGivexAPI, GivexAPI>();
             services.AddHttpContextAccessor();
             services.AddHttpClient();
         }

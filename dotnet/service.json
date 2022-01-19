@@ -4,7 +4,22 @@
   "runtimeArgs": [
   ],
   "routes": {
-    
+    "sendAntifraudPreAnalysisData": {
+      "path": "/cybersource-fraud/payment-provider/pre-analysis",
+      "public": true
+    },
+    "sendAntifraudData": {
+      "path": "/cybersource-fraud/payment-provider/transactions",
+      "public": true
+    },
+    "getAntifraudStatus": {
+      "path": "/cybersource-fraud/payment-provider/transactions/:transactionId",
+      "public": true
+    },
+    "printHeaders": {
+      "path": "/cybersource-fraud/print-headers",
+      "public": true
+    }
   },
   "events": {
     "onAppsLinked": {
