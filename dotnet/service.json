@@ -18,7 +18,7 @@
     },
     "printHeaders": {
       "path": "/cybersource-fraud/print-headers",
-      "public": true
+      "public": false
     }
   },
   "events": {
