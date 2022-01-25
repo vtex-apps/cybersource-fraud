@@ -17,7 +17,7 @@
     "postreleasy": "vtex publish --verbose"
   },
   "dependencies": {
-    "vtex.cybersource": "0.x"
+    "vtex.cybersource": "1.x"
   },
   "policies": [
     {
