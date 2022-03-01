@@ -10,6 +10,7 @@
     using Cybersource.Services;
     using Cybersource.Models;
     using Cybersource.Data;
+    using System.Collections.Generic;
 
     public class RoutesController : Controller
     {
@@ -117,6 +118,68 @@
             }
 
             return Json(sendAntifraudDataResponse);
+        }
+
+        public JsonResult Manifest()
+        {
+            Manifest manifest = new Manifest
+            {
+                PaymentMethods = new List<PaymentMethod>
+                {
+                    new PaymentMethod
+                    {
+                        Name = "Visa",
+                        AllowsSplit = "onCapture"
+                    },
+                    new PaymentMethod
+                    {
+                        Name = "American Express",
+                        AllowsSplit = "onCapture"
+                    },
+                    new PaymentMethod
+                    {
+                        Name = "Diners",
+                        AllowsSplit = "onCapture"
+                    },
+                    new PaymentMethod
+                    {
+                        Name = "Mastercard",
+                        AllowsSplit = "onCapture"
+                    },
+                    new PaymentMethod
+                    {
+                        Name = "Hipercard",
+                        AllowsSplit = "onCapture"
+                    },
+                    new PaymentMethod
+                    {
+                        Name = "Elo",
+                        AllowsSplit = "onCapture"
+                    },
+                    new PaymentMethod
+                    {
+                        Name = "JCB",
+                        AllowsSplit = "onCapture"
+                    }
+                },
+                CustomFields = new List<CustomField>
+                {
+                    new CustomField
+                    {
+                        Name = "Company Name",
+                        Type = "text"
+                    },
+                    new CustomField
+                    {
+                        Name = "Company Tax Id",
+                        Type = "text"
+                    }
+                }
+            };
+
+            //Response.Headers.Add("Cache-Control", "private");
+
+            return Json(manifest);
         }
 
         public string PrintHeaders()

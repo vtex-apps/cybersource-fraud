@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ShipStation.Models
+﻿namespace Cybersource.Models
 {
     public class ResponseWrapper
     {
