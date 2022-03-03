@@ -124,44 +124,6 @@
         {
             Manifest manifest = new Manifest
             {
-                PaymentMethods = new List<PaymentMethod>
-                {
-                    new PaymentMethod
-                    {
-                        Name = "Visa",
-                        AllowsSplit = "onCapture"
-                    },
-                    new PaymentMethod
-                    {
-                        Name = "American Express",
-                        AllowsSplit = "onCapture"
-                    },
-                    new PaymentMethod
-                    {
-                        Name = "Diners",
-                        AllowsSplit = "onCapture"
-                    },
-                    new PaymentMethod
-                    {
-                        Name = "Mastercard",
-                        AllowsSplit = "onCapture"
-                    },
-                    new PaymentMethod
-                    {
-                        Name = "Hipercard",
-                        AllowsSplit = "onCapture"
-                    },
-                    new PaymentMethod
-                    {
-                        Name = "Elo",
-                        AllowsSplit = "onCapture"
-                    },
-                    new PaymentMethod
-                    {
-                        Name = "JCB",
-                        AllowsSplit = "onCapture"
-                    }
-                },
                 CustomFields = new List<CustomField>
                 {
                     new CustomField
