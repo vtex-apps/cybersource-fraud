@@ -16,17 +16,5 @@ namespace Cybersource.Models
 
         [JsonProperty("type")]
         public string Type { get; set; }
-
-        [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Option> Options { get; set; }
-    }
-
-    public partial class Option
-    {
-        [JsonProperty("text")]
-        public string Text { get; set; }
-
-        [JsonProperty("value")]
-        public string Value { get; set; }
     }
 }
