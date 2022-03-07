@@ -4,10 +4,7 @@ using System.Collections.Generic;
 namespace Cybersource.Models
 {
     public class Manifest
-    {
-        [JsonProperty("paymentMethods", NullValueHandling = NullValueHandling.Ignore)]
-        public List<PaymentMethod> PaymentMethods { get; set; }
-        
+    {   
         [JsonProperty("customFields", NullValueHandling = NullValueHandling.Ignore)]
         public List<CustomField> CustomFields { get; set; }
     }
@@ -31,14 +28,5 @@ namespace Cybersource.Models
 
         [JsonProperty("value")]
         public string Value { get; set; }
-    }
-
-    public partial class PaymentMethod
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("allowsSplit")]
-        public string AllowsSplit { get; set; }
     }
 }
