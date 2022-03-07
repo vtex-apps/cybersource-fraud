@@ -5,10 +5,10 @@ namespace Cybersource.Models
 {
     public class Manifest
     {
-        [JsonProperty("paymentMethods")]
+        [JsonProperty("paymentMethods", NullValueHandling = NullValueHandling.Ignore)]
         public List<PaymentMethod> PaymentMethods { get; set; }
-
-        [JsonProperty("customFields")]
+        
+        [JsonProperty("customFields", NullValueHandling = NullValueHandling.Ignore)]
         public List<CustomField> CustomFields { get; set; }
     }
 
