@@ -67,7 +67,7 @@ namespace Cybersource.Services
                     ResponseText = responseContent
                 };
 
-                _context.Vtex.Logger.Debug("ForwardRequest", null, null, new[] { ("url", url, ("requestBody", requestBody), ("responseWrapper", JsonConvert.SerializeObject(responseWrapper)) });
+                _context.Vtex.Logger.Debug("ForwardRequest", null, null, new[] { ("url", url), ("requestBody", requestBody), ("responseWrapper", JsonConvert.SerializeObject(responseWrapper)) });
             }
             catch (Exception ex)
             {
