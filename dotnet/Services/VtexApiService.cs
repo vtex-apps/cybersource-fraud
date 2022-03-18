@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Vtex.Api.Context;
+using Newtonsoft.Json;
 
 namespace Cybersource.Services
 {
@@ -59,12 +60,14 @@ namespace Cybersource.Services
                 var client = _clientFactory.CreateClient();
                 HttpResponseMessage responseMessage = await client.SendAsync(request);
                 string responseContent = await responseMessage.Content.ReadAsStringAsync();
-                Console.WriteLine($"ForwardRequest [{responseMessage.IsSuccessStatusCode}] {responseContent}");
+                //Console.WriteLine($"ForwardRequest [{responseMessage.IsSuccessStatusCode}] {responseContent}");
                 responseWrapper = new ResponseWrapper
                 {
                     IsSuccess = responseMessage.IsSuccessStatusCode,
                     ResponseText = responseContent
                 };
+
+                _context.Vtex.Logger.Debug("ForwardRequest", null, null, new[] { ("url", url, ("requestBody", requestBody), ("responseWrapper", JsonConvert.SerializeObject(responseWrapper)) });
             }
             catch (Exception ex)
             {
