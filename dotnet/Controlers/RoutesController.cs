@@ -36,18 +36,11 @@
                 {
                     string forwardUrl = $"{HttpContext.Request.Headers[CybersourceConstants.FORWARDED_HOST]}/{CybersourceConstants.MainAppName}/payment-provider/transactions";
                     string bodyAsText = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-                    //_vtexApiService.ForwardRequest(forwardUrl, bodyAsText);
                     var response = await _vtexApiService.ForwardRequest(forwardUrl, bodyAsText);
-                    //if (response.IsSuccess)
-                    //{
-                    //    sendAntifraudDataResponse = JsonConvert.DeserializeObject<SendAntifraudDataResponse>(response.ResponseText);
-                    //}
-
-                    sendAntifraudDataResponse = new SendAntifraudDataResponse
+                    if (response.IsSuccess)
                     {
-                        Status = CybersourceConstants.VtexAntifraudStatus.Received
-                        //Status = CybersourceConstants.VtexAntifraudStatus.Undefined
-                    };
+                        sendAntifraudDataResponse = JsonConvert.DeserializeObject<SendAntifraudDataResponse>(response.ResponseText);
+                    }
                 }
                 catch(Exception ex)
                 {
