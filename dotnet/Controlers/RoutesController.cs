@@ -35,16 +35,17 @@
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                sendAntifraudDataResponse = new SendAntifraudDataResponse
-                {
-                    Status = CybersourceConstants.VtexAntifraudStatus.Received
-                };
-
                 try
                 {
                     string forwardUrl = $"{HttpContext.Request.Headers[CybersourceConstants.FORWARDED_HOST]}/{CybersourceConstants.MainAppName}/payment-provider/transactions";
                     string bodyAsText = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
                     _vtexApiService.ForwardRequest(forwardUrl, bodyAsText);
+                    SendAntifraudDataRequest sendAntifraudDataRequest = JsonConvert.DeserializeObject<SendAntifraudDataRequest>(bodyAsText);
+                    sendAntifraudDataResponse = new SendAntifraudDataResponse
+                    {
+                        Status = CybersourceConstants.VtexAntifraudStatus.Received,
+                        Id = sendAntifraudDataRequest.Id
+                    };
                 }
                 catch(Exception ex)
                 {
@@ -69,16 +70,17 @@
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                sendAntifraudDataResponse = new SendAntifraudDataResponse
-                {
-                    Status = CybersourceConstants.VtexAntifraudStatus.Received
-                };
-
                 try
                 {
                     string forwardUrl = $"{HttpContext.Request.Headers[CybersourceConstants.FORWARDED_HOST]}/{CybersourceConstants.MainAppName}/payment-provider/pre-analysis";
                     string bodyAsText = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
                     _vtexApiService.ForwardRequest(forwardUrl, bodyAsText);
+                    SendAntifraudDataRequest sendAntifraudDataRequest = JsonConvert.DeserializeObject<SendAntifraudDataRequest>(bodyAsText);
+                    sendAntifraudDataResponse = new SendAntifraudDataResponse
+                    {
+                        Status = CybersourceConstants.VtexAntifraudStatus.Received,
+                        Id = sendAntifraudDataRequest.Id
+                    };
                 }
                 catch (Exception ex)
                 {
