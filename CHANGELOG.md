@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- PreAnalysis synchronous response
+
 ## [0.0.10] - 2022-03-21
 
 ### Added
