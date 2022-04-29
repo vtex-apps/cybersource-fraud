@@ -17,11 +17,13 @@
     {
         private readonly IIOServiceContext _context;
         private readonly IVtexApiService _vtexApiService;
+        private readonly ICybersourceRepository _cybersourceRepository;
 
-        public RoutesController(IIOServiceContext context, IVtexApiService vtexApiService)
+        public RoutesController(IIOServiceContext context, IVtexApiService vtexApiService, ICybersourceRepository cybersourceRepository)
         {
             this._context = context ?? throw new ArgumentNullException(nameof(context));
             this._vtexApiService = vtexApiService ?? throw new ArgumentNullException(nameof(vtexApiService));
+            this._cybersourceRepository = cybersourceRepository ?? throw new ArgumentNullException(nameof(cybersourceRepository));
         }
 
         /// <summary>
@@ -37,15 +39,15 @@
                 sw.Start();
                 try
                 {
-                    string forwardUrl = $"{HttpContext.Request.Headers[CybersourceConstants.FORWARDED_HOST]}/{CybersourceConstants.MainAppName}/payment-provider/transactions";
                     string bodyAsText = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-                    _vtexApiService.ForwardRequest(forwardUrl, bodyAsText);
                     SendAntifraudDataRequest sendAntifraudDataRequest = JsonConvert.DeserializeObject<SendAntifraudDataRequest>(bodyAsText);
-                    sendAntifraudDataResponse = new SendAntifraudDataResponse
+                    string forwardUrl = $"{sendAntifraudDataRequest.Store}.myvtex.com/{CybersourceConstants.MainAppName}/payment-provider/transactions";
+                    ResponseWrapper responseWrapper = await _vtexApiService.ForwardRequest(forwardUrl, bodyAsText);
+                    if (responseWrapper.IsSuccess)
                     {
-                        Status = CybersourceConstants.VtexAntifraudStatus.Received,
-                        Id = sendAntifraudDataRequest.Id
-                    };
+                        sendAntifraudDataResponse = JsonConvert.DeserializeObject<SendAntifraudDataResponse>(responseWrapper.ResponseText);
+                        await this._cybersourceRepository.SaveAntifraudData(sendAntifraudDataRequest.Id, sendAntifraudDataResponse);
+                    }
                 }
                 catch(Exception ex)
                 {
@@ -72,20 +74,15 @@
                 sw.Start();
                 try
                 {
-                    string forwardUrl = $"{HttpContext.Request.Headers[CybersourceConstants.FORWARDED_HOST]}/{CybersourceConstants.MainAppName}/payment-provider/pre-analysis";
                     string bodyAsText = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+                    SendAntifraudDataRequest sendAntifraudDataRequest = JsonConvert.DeserializeObject<SendAntifraudDataRequest>(bodyAsText);
+                    string forwardUrl = $"{sendAntifraudDataRequest.Store}.myvtex.com/{CybersourceConstants.MainAppName}/payment-provider/pre-analysis";
                     ResponseWrapper responseWrapper = await _vtexApiService.ForwardRequest(forwardUrl, bodyAsText);
                     if(responseWrapper.IsSuccess)
                     {
                         sendAntifraudDataResponse = JsonConvert.DeserializeObject<SendAntifraudDataResponse>(responseWrapper.ResponseText);
+                        await this._cybersourceRepository.SaveAntifraudData(sendAntifraudDataRequest.Id, sendAntifraudDataResponse);
                     }
-
-                    //SendAntifraudDataRequest sendAntifraudDataRequest = JsonConvert.DeserializeObject<SendAntifraudDataRequest>(bodyAsText);
-                    //sendAntifraudDataResponse = new SendAntifraudDataResponse
-                    //{
-                    //    Status = CybersourceConstants.VtexAntifraudStatus.Received,
-                    //    Id = sendAntifraudDataRequest.Id
-                    //};
                 }
                 catch (Exception ex)
                 {
@@ -105,37 +102,30 @@
         /// <returns></returns>
         public async Task<IActionResult> GetAntifraudStatus(string transactionId)
         {
-            SendAntifraudDataResponse sendAntifraudDataResponse = null;
+            SendAntifraudDataResponse getAntifraudStatusResponse = null;
             Stopwatch sw = new Stopwatch();
             sw.Start();
             try
             {
-                string forwardUrl = $"{HttpContext.Request.Headers[CybersourceConstants.FORWARDED_HOST]}/{CybersourceConstants.MainAppName}/payment-provider/transactions/{transactionId}";
-                string bodyAsText = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-                ResponseWrapper response = await _vtexApiService.ForwardRequest(forwardUrl, bodyAsText);
-                if (response.IsSuccess)
+                getAntifraudStatusResponse = await this._cybersourceRepository.GetAntifraudData(transactionId);
+                if (getAntifraudStatusResponse == null)
                 {
-                    sendAntifraudDataResponse = JsonConvert.DeserializeObject<SendAntifraudDataResponse>(response.ResponseText);
+                    getAntifraudStatusResponse = new SendAntifraudDataResponse
+                    {
+                        Id = transactionId,
+                        Status = CybersourceConstants.VtexAntifraudStatus.Undefined
+                    };
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                _context.Vtex.Logger.Error("GetAntifraudStatus", null, "Error forwarding request", ex);
-            }
-
-            if (sendAntifraudDataResponse == null)
-            {
-                sendAntifraudDataResponse = new SendAntifraudDataResponse
-                {
-                    Id = transactionId,
-                    Status = CybersourceConstants.VtexAntifraudStatus.Undefined
-                };
+                _context.Vtex.Logger.Error("GetAntifraudStatus", null, $"Error getting antifraud status id:{transactionId}", ex);
             }
 
             sw.Stop();
-            _context.Vtex.Logger.Debug("GetAntifraudStatus", transactionId, $"Returning {sendAntifraudDataResponse.Status} in {sw.ElapsedMilliseconds} ms", new[] { ("sendAntifraudDataResponse", JsonConvert.SerializeObject(sendAntifraudDataResponse)) });
+            _context.Vtex.Logger.Debug("GetAntifraudStatus", transactionId, $"Returned {getAntifraudStatusResponse.Status} in {sw.Elapsed.TotalMilliseconds} ms ", new[] { ("getAntifraudStatusResponse", JsonConvert.SerializeObject(getAntifraudStatusResponse)) });
 
-            return Json(sendAntifraudDataResponse);
+            return Json(getAntifraudStatusResponse);
         }
 
         public JsonResult Manifest()
@@ -157,19 +147,7 @@
                 }
             };
 
-            //Response.Headers.Add("Cache-Control", "private");
-
             return Json(manifest);
-        }
-
-        public string PrintHeaders()
-        {
-            string headers = "--->>> Headers <<<---\n";
-            foreach (var header in HttpContext.Request.Headers)
-            {
-                headers += $"{header.Key}: {header.Value}\n";
-            }
-            return headers;
         }
     }
 }

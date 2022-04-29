@@ -38,6 +38,7 @@ namespace Cybersource.Services
 
         public async Task<ResponseWrapper> ForwardRequest(string url, string requestBody)
         {
+            Console.WriteLine($"ForwardRequest '{url}'");
             ResponseWrapper responseWrapper = null;
             try
             {
@@ -60,7 +61,7 @@ namespace Cybersource.Services
                 var client = _clientFactory.CreateClient();
                 HttpResponseMessage responseMessage = await client.SendAsync(request);
                 string responseContent = await responseMessage.Content.ReadAsStringAsync();
-                //Console.WriteLine($"ForwardRequest [{responseMessage.IsSuccessStatusCode}] {responseContent}");
+                Console.WriteLine($"ForwardRequest [{responseMessage.IsSuccessStatusCode}] {responseContent}");
                 responseWrapper = new ResponseWrapper
                 {
                     IsSuccess = responseMessage.IsSuccessStatusCode,

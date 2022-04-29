@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Analysis synchronous response
+- Store results in vBase
+
 ## [0.0.11] - 2022-03-22
 
 ### Changed
