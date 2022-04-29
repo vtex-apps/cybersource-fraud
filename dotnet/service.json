@@ -21,10 +21,6 @@
     "manifest": {
       "path": "/cybersource-fraud/payment-provider/manifest",
       "public": true
-    },
-    "printHeaders": {
-      "path": "/cybersource-fraud/print-headers",
-      "public": false
     }
   },
   "events": {
