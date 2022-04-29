@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.0.12] - 2022-04-29
+
 ### Changed
 
 - Analysis synchronous response
