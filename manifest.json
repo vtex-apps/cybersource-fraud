@@ -1,7 +1,7 @@
 {
   "name": "cybersource-fraud",
   "vendor": "vtex",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "title": "Cybersource IO Antifraud",
   "description": "Antifraud services for Cybersource IO app",
   "categories": [],
