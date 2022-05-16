@@ -47,6 +47,7 @@
                     {
                         sendAntifraudDataResponse = JsonConvert.DeserializeObject<SendAntifraudDataResponse>(responseWrapper.ResponseText);
                         await this._cybersourceRepository.SaveAntifraudData(sendAntifraudDataRequest.Id, sendAntifraudDataResponse);
+                        sendAntifraudDataResponse.Status = CybersourceConstants.VtexAntifraudStatus.Received;
                     }
                 }
                 catch(Exception ex)
