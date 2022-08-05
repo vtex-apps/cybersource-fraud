@@ -55,9 +55,21 @@
             var response = await client.SendAsync(request);
             string responseContent = await response.Content.ReadAsStringAsync();
 
-            if (response.StatusCode == HttpStatusCode.NotFound)
+            if (!response.IsSuccessStatusCode)
             {
-                _context.Vtex.Logger.Warn("GetAntifraudData", null, $"Id '{id}' Not Found.");
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _context.Vtex.Logger.Warn("GetAntifraudData", null, $"Id '{id}' Not Found.");
+                    return null;
+                }
+
+                _context.Vtex.Logger.Error("GetAntifraudData", null, 
+                "Error", null, 
+                new[] 
+                { 
+                    ("id", id), 
+                });
+                
                 return null;
             }
 

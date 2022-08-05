@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- (CYBRSOURCE-37) Logging optimization.
+
 ## [0.0.14] - 2022-05-16
 
 ### Changed

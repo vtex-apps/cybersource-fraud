@@ -72,7 +72,13 @@ namespace Cybersource.Services
             }
             catch (Exception ex)
             {
-                _context.Vtex.Logger.Error("ForwardRequest", null, $"{url}\n{requestBody}", ex);
+                _context.Vtex.Logger.Error("ForwardRequest", null, 
+                "Error: ", ex, 
+                new[] 
+                { 
+                    ("url", url),
+                    ("requestBody", requestBody)
+                });
             }
 
             return responseWrapper;
